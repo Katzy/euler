@@ -1,30 +1,50 @@
-def count(n)
-  solutions = { :n => 0, :sum => 0, :counter => 0 }
-  total = 0
-  num_to_inspect = 0
+solutions = {}
 
-  counter = 0
+def set_solutions_hash(digit, solutions)
+  n = digit
+  until n ==10
+    solutions[n.to_s] = { "digit" => n, "solutions" => 1, "sum" => 0, "counter" => 0}
+    n += 1
+  end
+  solutions
+end
+
+def total_sum(solutions)
+  n = 1
+  total = 0
   until n == 10
-    until num_to_inspect == 1500000000
-      num_to_inspect.to_s.chars.map.each do |num|
-        if num.to_i == n
-          counter += 1
+    total += solutions[n.to_s]["sum"]
+    n += 1
+  end
+  p total
+end
+
+def count(digit, solutions)
+  num_to_inspect = digit - 1
+  set_solutions_hash(digit, solutions)
+  digit_pointer = digit
+  until num_to_inspect == 1200000000
+    num_to_inspect.to_s.chars.map.each do |num|
+      if num.to_i > 0
+        solutions[num]["counter"] += 1
+
+        if solutions[num]["counter"] == num_to_inspect   # the last solution for the digit
+            solutions[num]["solutions"] += 1
+           solutions[num]["sum"] += num_to_inspect
         end
       end
-
-      if counter == num_to_inspect
-        solutions[:n] += 1
-        solutions[:sum] += num_to_inspect
-        solutions[:counter] = counter
-        p solutions
-      end
-      num_to_inspect += 1
     end
-    total += solutions[:sum]
-    counter = 0
-    n += 1
-    num_to_inspect = 0
-    solutions = { :n => 0, :sum => 0, :counter => 0 }
+     num_to_inspect += 1
   end
-  puts total
+
+  p solutions
+  total_sum(solutions)
+end
+
+if __FILE__ == $0
+
+solutions = {}
+
+count(1, solutions)
+
 end
